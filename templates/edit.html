@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Anime</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Edit Anime</h1>
+    </header>
+
+    <div class="form-container">
+        <form method="POST">
+            <label>Title:</label>
+            <input type="text" name="title" value="{{ anime[1] }}" required>
+
+            <label>Genre:</label>
+            <input type="text" name="genre" value="{{ anime[2] }}">
+
+            <label>Status:</label>
+            <select name="status">
+                <option value="Watching" {% if anime[3]=='Watching' %}selected{% endif %}>Watching</option>
+                <option value="Completed" {% if anime[3]=='Completed' %}selected{% endif %}>Completed</option>
+                <option value="Plan to Watch" {% if anime[3]=='Plan to Watch' %}selected{% endif %}>Plan to Watch</option>
+            </select>
+
+            <label>Total Episodes:</label>
+            <input type="number" name="total_episodes" value="{{ anime[4] }}">
+
+            <div class="btn-group">
+                <button type="submit" class="add-btn">Update</button>
+                <a href="/" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

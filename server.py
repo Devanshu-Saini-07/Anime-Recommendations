@@ -50,5 +50,36 @@ def recommendations():
     recommendations = cursor.fetchall()
     return render_template("recommendations.html", recommendations=recommendations)
 
+@app.route('/edit/<int:anime_id>', methods=['GET', 'POST'])
+def edit(anime_id):
+    db = connect()
+    cursor = db.cursor()
+
+    if request.method == 'POST':
+        title = request.form['title']
+        genre = request.form['genre']
+        status = request.form['status']
+        total_episodes = request.form['total_episodes']
+
+        cursor.execute("""
+            UPDATE Anime 
+            SET title=%s, genre=%s, status=%s, total_episodes=%s 
+            WHERE anime_id=%s
+        """, (title, genre, status, total_episodes, anime_id))
+        db.commit()
+        return redirect('/')
+
+    cursor.execute("SELECT * FROM Anime WHERE anime_id=%s", (anime_id,))
+    anime = cursor.fetchone()
+    return render_template("edit.html", anime=anime)
+
+@app.route('/delete/<int:anime_id>', methods=['POST'])
+def delete(anime_id):
+    db = connect()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM Anime WHERE anime_id=%s", (anime_id,))
+    db.commit()
+    return redirect('/')
+
 if __name__ == '__main__':
     app.run(debug=True)

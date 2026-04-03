@@ -199,3 +199,16 @@ textarea {
     font-size: 14px;
     color: #555;
 }
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
