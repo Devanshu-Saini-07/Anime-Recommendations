@@ -29,25 +29,25 @@ Built with **Python, Flask, MySQL, HTML, CSS**.
 ## 📂 Project Structure
 Anime Recommendations/
 │
-├── server.py              # Flask backend
-├── db_config.py           # Database connection
-├── schema.sql             # Database schema
-│
-├── static/                # Static files (CSS, JS, images)
-│   └── style.css          # Styling
-│
-└── templates/             # HTML templates
-    ├── index.html         # Homepage (anime list + filters)
-    ├── add.html           # Add anime form
-    ├── details.html       # Anime details page
-    └── recommendations.html # Recommendations page
+├── server.py              # Flask backend<br>
+├── db_config.py           # Database connection<br>
+├── schema.sql             # Database schema<br>
+│<br>
+├── static/                # Static files (CSS, JS, images)<br>
+│   └── style.css          # Styling<br>
+│<br>
+└── templates/             # HTML templates<br>
+    ├── index.html         # Homepage (anime list + filters)<br>
+    ├── add.html           # Add anime form<br>
+    ├── details.html       # Anime details page<br>
+    └── recommendations.html # Recommendations page<br>
 
 
 
 ## ⚙️ Setup Instructions
 
 ### 1. Clone the repository
-git clone https://github.com/Devanshu-Saini-07/Anime-Recommendations.git
+git clone https://github.com/Devanshu-Saini-07/Anime-Recommendations.git<br>
 cd anime-recommendations
 
 ### 2. Install dependencies
@@ -57,12 +57,12 @@ pip install flask mysql-connector-python
 mysql -u root -p < schema.sql
 
 # Update db_config.py with your MySQL credentials:
-def connect():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="yourpassword",
-        database="anime_db"
+def connect():<br>
+    return mysql.connector.connect(<br>
+        host="localhost",<br>
+        user="root",<br>
+        password="yourpassword",<br>
+        database="anime_db"<br>
     )
 
 ### 4. Run the server
