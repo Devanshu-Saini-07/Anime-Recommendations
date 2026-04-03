@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Anime</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Add New Anime</h1>
+    </header>
+
+    <div class="form-container">
+        <form method="POST">
+            <label>Title</label>
+            <input type="text" name="title" required>
+
+            <label>Genre</label>
+            <input type="text" name="genre">
+
+            <label>Status</label>
+            <select name="status">
+                <option>Watching</option>
+                <option>Completed</option>
+                <option>Plan to Watch</option>
+            </select>
+
+            <label>Total Episodes</label>
+            <input type="number" name="total_episodes">
+
+            <div class="btn-group">
+                <a href="/" class="cancel-btn">Cancel</a>
+                <button type="submit" class="add-btn">Add</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

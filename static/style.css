@@ -1,0 +1,201 @@
+/* Global */
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #f2f7ff;
+}
+
+header {
+    background: linear-gradient(to right, #6aa9ff, #8ec5ff);
+    padding: 20px;
+    text-align: center;
+    color: white;
+}
+
+h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+/* Filter Bar (Index Page) */
+.filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    border: none;
+    background: #dce9ff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    color: black;
+}
+
+.filter-btn:hover {
+    background: #6aa9ff;
+    color: white;
+}
+
+/* Table (Index Page) */
+table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: #6aa9ff;
+    color: white;
+}
+
+tr:hover {
+    background: #f0f6ff;
+}
+
+/* Add Button */
+.add-btn-container {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.add-btn {
+    background: #6aa9ff;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.add-btn:hover {
+    background: #4f8fe0;
+}
+
+/* Form (Add Page) */
+.form-container {
+    width: 40%;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.btn-group {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cancel-btn {
+    background: #ccc;
+    color: black;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.cancel-btn:hover {
+    background: #b3b3b3;
+}
+
+/* Details Page */
+.details-container {
+    width: 50%;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.details-container h2 {
+    margin-top: 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #dce9ff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress {
+    height: 100%;
+    background: #6aa9ff;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+/* Recommendations Page */
+.recommendations-container {
+    width: 85%;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.rec-item {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+.rec-item:hover {
+    transform: scale(1.03);
+}
+
+.rec-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2a5fcc;
+    margin-bottom: 8px;
+}
+
+.rec-genre, .rec-status {
+    font-size: 14px;
+    color: #555;
+}

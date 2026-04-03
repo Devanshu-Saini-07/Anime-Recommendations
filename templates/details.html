@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Anime Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Anime Details</h1>
+    </header>
+
+    <div class="details-container">
+        <h2>{{ anime[1] }}</h2>
+        <p><strong>Genre:</strong> {{ anime[2] }}</p>
+        <p><strong>Status:</strong> {{ anime[3] }}</p>
+        <p><strong>Total Episodes:</strong> {{ anime[4] }}</p>
+
+        <div class="progress-bar">
+            <div class="progress" style="width:50%"></div>
+        </div>
+
+        <textarea placeholder="Your notes..."></textarea>
+    </div>
+
+    <div class="add-btn-container">
+        <a href="/" class="cancel-btn">← Back</a>
+    </div>
+</body>
+</html>

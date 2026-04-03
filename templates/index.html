@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Anime List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header>
+        <h1>My Anime List</h1>
+    </header>
+
+    <div class="filter-bar">
+        <a href="/" class="filter-btn {% if not selected_status or selected_status=='All' %}active{% endif %}">All</a>
+        <a href="/?status=Watching"
+            class="filter-btn {% if selected_status=='Watching' %}active{% endif %}">Watching</a>
+        <a href="/?status=Completed"
+            class="filter-btn {% if selected_status=='Completed' %}active{% endif %}">Completed</a>
+        <a href="/?status=Plan to Watch"
+            class="filter-btn {% if selected_status=='Plan to Watch' %}active{% endif %}">Plan to Watch</a>
+    </div>
+    <table>
+        <tr>
+            <th>Anime Title</th>
+            <th>Status</th>
+            <th>Episodes</th>
+            <th>Details</th>
+        </tr>
+        {% for anime in anime_list %}
+        <tr>
+            <td>{{ anime[1] }}</td>
+            <td>{{ anime[3] }}</td>
+            <td>{{ anime[4] }}</td>
+            <td><a href="/details/{{ anime[0] }}">View</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="add-btn-container">
+        <a href="/add" class="add-btn">+ Add Anime</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommendations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Recommended Anime</h1>
+    </header>
+
+    <div class="recommendations-container">
+        {% if recommendations %}
+            {% for rec in recommendations %}
+            <div class="rec-item">
+                <div class="rec-title">{{ rec[1] }}</div>
+                <div class="rec-genre">Genre: {{ rec[2] }}</div>
+                <div class="rec-status">Status: {{ rec[3] }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No recommendations available yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="add-btn-container">
+        <a href="/" class="cancel-btn">← Back to Home</a>
+    </div>
+</body>
+</html>
