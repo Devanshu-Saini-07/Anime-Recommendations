@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS anime_db;
-USE anime_db;
+CREATE DATABASE IF NOT EXISTS anime_tracker;
+USE anime_tracker;
 
 CREATE TABLE IF NOT EXISTS Anime (
     anime_id INT AUTO_INCREMENT PRIMARY KEY,

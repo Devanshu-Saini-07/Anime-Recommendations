@@ -5,5 +5,5 @@ def connect():
         host="localhost",
         user="root",
         password="12345",
-        database="anime_db"
+        database="anime_tracker"
     )
