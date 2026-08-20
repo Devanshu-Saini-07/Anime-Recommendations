@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS anime_tracker;
 USE anime_tracker;
 
-CREATE TABLE IF NOT EXISTS Anime (
+CREATE TABLE IF NOT EXISTS anime (
     anime_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     genre VARCHAR(50),
