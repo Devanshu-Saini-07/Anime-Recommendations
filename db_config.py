@@ -9,8 +9,12 @@ _pool = None
 
 def _get_required_env(name):
     value = os.getenv(name)
+
     if not value:
-        raise RuntimeError(f"Missing required environment variable: {name}")
+        raise RuntimeError(
+            f"Missing required environment variable: {name}"
+        )
+
     return value
 
 
@@ -35,5 +39,8 @@ def connect():
 
     try:
         return _pool.get_connection()
+
     except Error as exc:
-        raise RuntimeError("Unable to connect to the MySQL database.") from exc
+        raise RuntimeError(
+            "Unable to connect to the MySQL database."
+        ) from exc
