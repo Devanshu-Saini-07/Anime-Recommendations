@@ -1,72 +1,84 @@
 # Anime Recommendations Web App
 
-A simple Flask + MySQL web application to manage your anime list, track details, and view recommendations.  
-Built with **Python, Flask, MySQL, HTML, CSS**.
+A Flask + MySQL web application to manage an anime list, track details, and view recommendations.
 
----
+## Project Structure
+- `server.py`: Flask application entry point and routes
+- `db_config.py`: MySQL connection pool configuration using environment variables
+- `templates/`: Jinja templates
+- `static/`: CSS and image assets
+- `schema.sql`: MySQL schema
+- `requirements.txt`: Python dependencies
+- `Procfile`: Gunicorn start command for process-based platforms
+- `render.yaml`: Render deployment configuration
 
-## 🚀 Features
-- Add new anime with title, genre, status, and total episodes
-- View anime list in a clean table with filters:
-  - All
-  - Watching
-  - Completed
-  - Plan to Watch
-- Detailed view for each anime with progress bar and notes
-- Recommendations page showing completed anime in a card layout
-- Responsive design with modern CSS styling
+## Local Setup
+1. Create and activate a virtual environment.
+2. Install dependencies:
 
----
+```bash
+pip install -r requirements.txt
+```
 
-## 🛠️ Tech Stack
-- **Backend:** Python (Flask)
-- **Database:** MySQL
-- **Frontend:** HTML, CSS
-- **Template Engine:** Jinja2
+3. Create a `.env` file based on `.env.example`.
+4. Create the MySQL database and table:
 
----
+```sql
+SOURCE schema.sql;
+```
 
-## 📂 Project Structure
-Anime Recommendations/
-│
-├── server.py              # Flask backend<br>
-├── db_config.py           # Database connection<br>
-├── schema.sql             # Database schema<br>
-│<br>
-├── static/                # Static files (CSS, JS, images)<br>
-│   └── style.css          # Styling<br>
-│<br>
-└── templates/             # HTML templates<br>
-    ├── index.html         # Homepage (anime list + filters)<br>
-    ├── add.html           # Add anime form<br>
-    ├── details.html       # Anime details page<br>
-    └── recommendations.html # Recommendations page<br>
+5. Run the app locally:
 
-
-
-## ⚙️ Setup Instructions
-
-### 1. Clone the repository
-git clone https://github.com/Devanshu-Saini-07/Anime-Recommendations.git<br>
-cd anime-recommendations
-
-### 2. Install dependencies
-pip install flask mysql-connector-python
-
-### 3. Setup MySQL database
-mysql -u root -p < schema.sql
-
-# Update db_config.py with your MySQL credentials:
-def connect():<br>
-    return mysql.connector.connect(<br>
-        host="localhost",<br>
-        user="root",<br>
-        password="yourpassword",<br>
-        database="anime_db"<br>
-    )
-
-### 4. Run the server
+```bash
 python server.py
+```
 
-# Open in browser:
-http://127.0.0.1:5000/
+The app will start on `http://127.0.0.1:5000/`.
+
+## Required Environment Variables
+- `FLASK_SECRET_KEY`
+- `DB_HOST`
+- `DB_PORT`
+- `DB_USER`
+- `DB_PASSWORD`
+- `DB_NAME`
+
+Optional:
+- `FLASK_ENV`
+- `FLASK_DEBUG`
+- `DB_POOL_NAME`
+- `DB_POOL_SIZE`
+- `PORT`
+
+## Production Start Command
+
+```bash
+gunicorn --bind 0.0.0.0:$PORT server:app
+```
+
+## Recommended Deployment Target
+Render is a good fit for this app because it supports persistent Python web services with Gunicorn and external MySQL databases cleanly.
+
+## Deployment Steps
+1. Push this repository to GitHub.
+2. Create a MySQL database with a managed provider.
+3. In Render, create a new Web Service from the repo.
+4. Set the build command to:
+
+```bash
+pip install -r requirements.txt
+```
+
+5. Set the start command to:
+
+```bash
+gunicorn --bind 0.0.0.0:$PORT server:app
+```
+
+6. Configure the required environment variables in the Render dashboard.
+7. Run `schema.sql` against the target MySQL database before first use.
+
+## Notes
+- Do not commit `.env` or real credentials.
+- `localhost` is no longer assumed for the database host.
+- Flask debug mode is disabled for production execution.

@@ -27,19 +27,13 @@
             <th>Anime Title</th>
             <th>Status</th>
             <th>Episodes</th>
-            <th>Details</th>
+            <th>Actions</th>
         </tr>
         {% for anime in anime_list %}
         <tr>
             <td>{{ anime[1] }}</td>
             <td>{{ anime[3] }}</td>
             <td>{{ anime[4] }}</td>
-            <td><a href="/details/{{ anime[0] }}">View</a></td>
-            <td>
-                <a href="/details/{{ anime[0] }}">View</a> |
-                <a href="/edit/{{ anime[0] }}">Edit</a>
-            </td>
-
             <td>
                 <a href="/details/{{ anime[0] }}">View</a> |
                 <a href="/edit/{{ anime[0] }}">Edit</a> |
