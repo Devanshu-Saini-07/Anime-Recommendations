@@ -48,9 +48,9 @@ def home():
     status = request.args.get("status")
 
     if status and status != "All":
-        anime_list = fetch_all("SELECT * FROM Anime WHERE status=%s", (status,))
+        anime_list = fetch_all("SELECT * FROM anime WHERE status=%s", (status,))
     else:
-        anime_list = fetch_all("SELECT * FROM Anime")
+        anime_list = fetch_all("SELECT * FROM anime")
 
     return render_template("index.html", anime_list=anime_list, selected_status=status)
 
@@ -63,7 +63,7 @@ def add():
         status = request.form["status"]
         total_episodes = request.form["total_episodes"]
 
-        query = "INSERT INTO Anime (title, genre, status, total_episodes) VALUES (%s, %s, %s, %s)"
+        query = "INSERT INTO anime (title, genre, status, total_episodes) VALUES (%s, %s, %s, %s)"
         execute_query(query, (title, genre, status, total_episodes))
         return redirect("/")
 
@@ -72,13 +72,13 @@ def add():
 
 @app.route("/details/<int:anime_id>")
 def details(anime_id):
-    anime = fetch_one("SELECT * FROM Anime WHERE anime_id=%s", (anime_id,))
+    anime = fetch_one("SELECT * FROM anime WHERE anime_id=%s", (anime_id,))
     return render_template("details.html", anime=anime)
 
 
 @app.route("/recommendations")
 def recommendations():
-    recommendations = fetch_all("SELECT * FROM Anime WHERE status='Completed'")
+    recommendations = fetch_all("SELECT * FROM anime WHERE status='Completed'")
     return render_template("recommendations.html", recommendations=recommendations)
 
 
@@ -92,7 +92,7 @@ def edit(anime_id):
 
         execute_query(
             """
-            UPDATE Anime
+            UPDATE anime
             SET title=%s, genre=%s, status=%s, total_episodes=%s
             WHERE anime_id=%s
             """,
@@ -100,13 +100,13 @@ def edit(anime_id):
         )
         return redirect("/")
 
-    anime = fetch_one("SELECT * FROM Anime WHERE anime_id=%s", (anime_id,))
+    anime = fetch_one("SELECT * FROM anime WHERE anime_id=%s", (anime_id,))
     return render_template("edit.html", anime=anime)
 
 
 @app.route("/delete/<int:anime_id>", methods=["POST"])
 def delete(anime_id):
-    execute_query("DELETE FROM Anime WHERE anime_id=%s", (anime_id,))
+    execute_query("DELETE FROM anime WHERE anime_id=%s", (anime_id,))
     return redirect("/")
 
 
