@@ -813,8 +813,10 @@ textarea:focus {
     position: fixed;
     left: 0;
     top: 0;
+    pointer-events: none;
     opacity: 0;
     transition: opacity 180ms ease;
+    will-change: transform, opacity;
 }
 
 .moon-cursor.is-active,
@@ -823,8 +825,9 @@ textarea:focus {
 }
 
 .moon-cursor {
-    width: 140px;
-    height: 140px;
+    width: 72px;
+    height: 72px;
+    transform: translate(-50%, -50%);
 }
 
 .moon-ring,
@@ -848,15 +851,15 @@ textarea:focus {
 }
 
 .moon-core {
-    width: 24px;
-    height: 24px;
+    width: 14px;
+    height: 14px;
     background: rgba(230, 239, 255, 0.85);
-    box-shadow: 0 0 26px rgba(206, 221, 255, 0.45);
+    box-shadow: 0 0 18px rgba(206, 221, 255, 0.42);
 }
 
 .sword-cursor {
-    width: 96px;
-    height: 96px;
+    width: 72px;
+    height: 72px;
     background-image: url("/static/images/moon-sword.png");
     background-repeat: no-repeat;
     background-position: center;
