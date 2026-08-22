@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-visual reveal" aria-hidden="true">
+        <div class="auth-orb auth-orb-alt"></div>
+        <div class="auth-copy">
+            <p class="eyebrow">Start fresh</p>
+            <h1>Create your account.</h1>
+            <p>Build a secure anime profile with your own preferences, watch history, and future recommendation space.</p>
+        </div>
+    </div>
+
+    <form method="POST" class="glass-panel auth-card reveal">
+        <input type="hidden" name="next" value="{{ next_url }}">
+        <p class="eyebrow">Private Profile Setup</p>
+        <h2>Join Anime Recommendations</h2>
+
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" required>
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required>
+
+        <label for="signup-password">Password</label>
+        <div class="password-field">
+            <input id="signup-password" name="password" type="password" required>
+            <button type="button" class="password-toggle" data-password-toggle data-target="signup-password">Show</button>
+        </div>
+
+        <label for="confirm-password">Confirm Password</label>
+        <div class="password-field">
+            <input id="confirm-password" name="confirm_password" type="password" required>
+            <button type="button" class="password-toggle" data-password-toggle data-target="confirm-password">Show</button>
+        </div>
+
+        <button type="submit" class="primary-button wide-button">Create Account</button>
+        <p class="auth-footer">Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+    </form>
+</section>
+{% endblock %}

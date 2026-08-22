@@ -1,30 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Anime Details</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Anime Details</h1>
-    </header>
+{% extends "base.html" %}
 
-    <div class="details-container">
-        <h2>{{ anime[1] }}</h2>
-        <p><strong>Genre:</strong> {{ anime[2] }}</p>
-        <p><strong>Status:</strong> {{ anime[3] }}</p>
-        <p><strong>Total Episodes:</strong> {{ anime[4] }}</p>
+{% block title %}Anime Details{% endblock %}
 
-        <div class="progress-bar">
-            <div class="progress" style="width:50%"></div>
+{% block content %}
+<section class="details-layout" data-cursor-mode="sword">
+    <article class="glass-panel details-hero reveal">
+        <div class="details-visual">
+            <div class="details-emblem">{{ anime.poster_hint }}</div>
         </div>
+        <div class="details-copy">
+            <p class="eyebrow">Anime Profile</p>
+            <h1>{{ anime.title }}</h1>
+            <p class="details-description">{{ anime.description }}</p>
 
-        <textarea placeholder="Your notes..."></textarea>
-    </div>
+            <div class="details-tags">
+                <span class="status-badge status-{{ anime.status|lower|replace(' ', '-') }}">{{ anime.status }}</span>
+                <span class="meta-chip">{{ anime.genre }}</span>
+                <span class="meta-chip">{{ anime.total_episodes }} Episodes</span>
+            </div>
 
-    <div class="add-btn-container">
-        <a href="/" class="cancel-btn">← Back</a>
-    </div>
-</body>
-</html>
+            <div class="progress-block">
+                <div class="progress-head">
+                    <span>Journey progress</span>
+                    <strong>{{ progress_value }}%</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ progress_value }}%;"></div>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <a href="{{ url_for('edit', anime_id=anime.anime_id) }}" class="primary-button">Edit</a>
+                <form action="{{ url_for('delete', anime_id=anime.anime_id) }}" method="POST">
+                    <button type="submit" class="danger-button">Delete</button>
+                </form>
+                <a href="{{ url_for('home') }}" class="ghost-button">Back</a>
+            </div>
+        </div>
+    </article>
+</section>
+{% endblock %}

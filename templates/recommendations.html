@@ -1,31 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Recommendations</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Recommended Anime</h1>
-    </header>
+{% extends "base.html" %}
 
-    <div class="recommendations-container">
-        {% if recommendations %}
-            {% for rec in recommendations %}
-            <div class="rec-item">
-                <div class="rec-title">{{ rec[1] }}</div>
-                <div class="rec-genre">Genre: {{ rec[2] }}</div>
-                <div class="rec-status">Status: {{ rec[3] }}</div>
+{% block title %}For You{% endblock %}
+
+{% block content %}
+<section class="content-shell" data-cursor-mode="sword">
+    <div class="section-head reveal">
+        <div>
+            <p class="eyebrow">Recommendation-Ready</p>
+            <h1>For You</h1>
+        </div>
+        <p class="section-copy">
+            This section already excludes anime in your watch history before any future AI API call. Personalized recommendation generation is not active yet.
+        </p>
+    </div>
+
+    <section class="overview-grid reveal">
+        <article class="glass-panel overview-card">
+            <p class="card-kicker">Saved preferences</p>
+            <h3>{{ preference_summary.count }} genres</h3>
+            <div class="pill-row">
+                {% for genre in preference_summary.genres %}
+                <span class="meta-chip">{{ genre }}</span>
+                {% endfor %}
             </div>
-            {% endfor %}
-        {% else %}
-            <p>No recommendations available yet.</p>
-        {% endif %}
-    </div>
+        </article>
+        <article class="glass-panel overview-card">
+            <p class="card-kicker">Filtered pool</p>
+            <h3>{{ candidate_count }} candidates</h3>
+            <p>These are catalog entries left after removing titles already marked Watching, Completed, or Plan to Watch for your account.</p>
+        </article>
+        <article class="glass-panel overview-card">
+            <p class="card-kicker">Next integration step</p>
+            <h3>AI comes later</h3>
+            <p>The API layer can be added later on top of these cleaned inputs without changing user ownership rules.</p>
+        </article>
+    </section>
 
-    <div class="add-btn-container">
-        <a href="/" class="cancel-btn">← Back to Home</a>
-    </div>
-</body>
-</html>
+    {% if recommendations %}
+    <section class="recommendation-grid reveal">
+        {% for rec in recommendations %}
+        <article class="recommendation-card">
+            <div class="recommendation-visual">{{ rec.poster_hint }}</div>
+            <div class="recommendation-body">
+                <h2>{{ rec.title }}</h2>
+                <p>{{ rec.description[:130] }}{% if rec.description|length > 130 %}...{% endif %}</p>
+                <div class="details-tags">
+                    <span class="meta-chip">{{ rec.genre }}</span>
+                    <span class="meta-chip">{{ rec.total_episodes }} Episodes</span>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </section>
+    {% else %}
+    <section class="empty-state reveal">
+        <div class="empty-state-art">✦</div>
+        <h2>No candidate pool yet.</h2>
+        <p>Add more catalog data or complete your preferences to prepare the future recommendation feed.</p>
+    </section>
+    {% endif %}
+</section>
+{% endblock %}
