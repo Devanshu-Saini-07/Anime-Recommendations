@@ -65,7 +65,17 @@
         return;
     }
 
-    const sections = Array.from(document.querySelectorAll("[data-cursor-mode]"));
+    const isAuthPage = body.classList.contains("auth-page");
+    const interactiveSelector = [
+        "button",
+        "a[href]",
+        "input",
+        "select",
+        "textarea",
+        "label",
+        "[role='button']",
+        "[data-menu-toggle]"
+    ].join(", ");
     let currentMode = null;
     let pointerX = window.innerWidth / 2;
     let pointerY = window.innerHeight / 2;
@@ -95,8 +105,12 @@
     }
 
     function getModeFromTarget(target) {
-        const activeSection = target && target.closest ? target.closest("[data-cursor-mode]") : null;
-        return activeSection ? activeSection.getAttribute("data-cursor-mode") || "moon" : "moon";
+        if (isAuthPage) {
+            return "sword";
+        }
+
+        const interactiveTarget = target && target.closest ? target.closest(interactiveSelector) : null;
+        return interactiveTarget ? "sword" : "moon";
     }
 
     function animate() {
@@ -106,7 +120,7 @@
         swordY += (pointerY - swordY) * 0.22;
 
         moonCursor.style.transform = "translate(" + moonX + "px, " + moonY + "px) translate(-50%, -50%)";
-        swordCursor.style.transform = "translate(" + (swordX - 18) + "px, " + (swordY - 16) + "px)";
+        swordCursor.style.transform = "translate(" + (swordX - 12) + "px, " + (swordY - 12) + "px)";
 
         window.requestAnimationFrame(animate);
     }
@@ -133,8 +147,6 @@
         applyMode(getModeFromTarget(lastPointerTarget));
     });
 
-    applyMode(sections.some(function (section) {
-        return section.getAttribute("data-cursor-mode") === "moon";
-    }) ? "moon" : "sword");
+    applyMode(isAuthPage ? "sword" : "moon");
     animate();
 })();
