@@ -1,38 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Anime</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Add New Anime</h1>
-    </header>
+{% extends "base.html" %}
 
-    <div class="form-container">
-        <form method="POST">
-            <label>Title</label>
-            <input type="text" name="title" required>
+{% block title %}Add Anime{% endblock %}
 
-            <label>Genre</label>
-            <input type="text" name="genre">
-
-            <label>Status</label>
-            <select name="status">
-                <option>Watching</option>
-                <option>Completed</option>
-                <option>Plan to Watch</option>
-            </select>
-
-            <label>Total Episodes</label>
-            <input type="number" name="total_episodes">
-
-            <div class="btn-group">
-                <a href="/" class="cancel-btn">Cancel</a>
-                <button type="submit" class="add-btn">Add</button>
-            </div>
-        </form>
+{% block content %}
+<section class="content-shell content-shell-form" data-cursor-mode="sword">
+    <div class="section-head reveal">
+        <div>
+            <p class="eyebrow">New History Entry</p>
+            <h1>Add anime to your watch history</h1>
+        </div>
+        <p class="section-copy">Every entry belongs only to your account and feeds your future recommendation profile.</p>
     </div>
-</body>
-</html>
+
+    {% include "partials/anime_form.html" %}
+</section>
+{% endblock %}

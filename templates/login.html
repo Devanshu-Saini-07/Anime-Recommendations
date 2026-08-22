@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-visual reveal" aria-hidden="true">
+        <div class="auth-orb"></div>
+        <div class="auth-copy">
+            <p class="eyebrow">Return to your list</p>
+            <h1>Welcome back.</h1>
+            <p>Pick up your watch history, preferences, and future recommendation setup exactly where you left it.</p>
+        </div>
+    </div>
+
+    <form method="POST" class="glass-panel auth-card reveal">
+        <input type="hidden" name="next" value="{{ next_url }}">
+        <p class="eyebrow">Secure Login</p>
+        <h2>Continue your anime journey</h2>
+
+        <label for="identifier">Username or Email</label>
+        <input id="identifier" name="identifier" type="text" required>
+
+        <label for="password">Password</label>
+        <div class="password-field">
+            <input id="password" name="password" type="password" required>
+            <button type="button" class="password-toggle" data-password-toggle data-target="password">Show</button>
+        </div>
+
+        <label class="checkbox-row">
+            <input type="checkbox" name="remember_me">
+            <span>Remember me</span>
+        </label>
+
+        <button type="submit" class="primary-button wide-button">Login</button>
+        <p class="auth-footer">Need an account? <a href="{{ url_for('signup') }}">Sign up</a></p>
+    </form>
+</section>
+{% endblock %}

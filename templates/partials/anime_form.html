@@ -1,0 +1,39 @@
+<section class="panel-grid reveal">
+    <form method="POST" class="glass-panel form-panel">
+        <label for="title">Title</label>
+        <input id="title" type="text" name="title" value="{{ anime.title if anime else '' }}" required>
+
+        <label for="genre">Genre</label>
+        <input id="genre" type="text" name="genre" value="{{ anime.genre if anime else '' }}" placeholder="Action, Mystery, Fantasy">
+
+        <label for="status">Watch Status</label>
+        <select id="status" name="status">
+            {% for option in status_options if option != "All" %}
+            <option value="{{ option }}" {% if anime and anime.status == option %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="total_episodes">Total Episodes</label>
+        <input id="total_episodes" type="number" min="0" name="total_episodes" value="{{ anime.total_episodes if anime else '' }}" placeholder="24">
+
+        <label for="poster_hint">Poster / Visual Label</label>
+        <input id="poster_hint" type="text" name="poster_hint" value="{{ anime.poster_hint if anime else '' }}" placeholder="Moonlit Action">
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="5" placeholder="Add a short note about the story, tone, or why it matters to your list.">{{ anime.description if anime else '' }}</textarea>
+
+        <div class="form-actions">
+            <a href="{{ url_for('home') }}" class="ghost-button">Cancel</a>
+            <button type="submit" class="primary-button">{% if form_mode == "edit" %}Update Anime{% else %}Add Anime{% endif %}</button>
+        </div>
+    </form>
+
+    <aside class="glass-panel side-panel">
+        <div class="side-orb" aria-hidden="true"></div>
+        <p class="card-kicker">Private watch history</p>
+        <h2>{% if form_mode == "edit" %}Refine the details{% else %}Start a new arc{% endif %}</h2>
+        <p>
+            Each record is scoped to your authenticated account, so two users can track the same series with different statuses safely.
+        </p>
+    </aside>
+</section>

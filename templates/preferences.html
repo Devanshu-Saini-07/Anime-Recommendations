@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_edit_mode %}Edit Preferences{% else %}Choose Preferences{% endif %}{% endblock %}
+
+{% block content %}
+<section class="preferences-layout" data-cursor-mode="sword">
+    <div class="section-head reveal">
+        <div>
+            <p class="eyebrow">{% if is_edit_mode %}Tune your profile{% else %}First-time onboarding{% endif %}</p>
+            <h1>What type of anime do you like?</h1>
+        </div>
+        <p class="section-copy">
+            Select multiple genres to shape your personal discovery profile. You can edit these anytime from your dashboard.
+        </p>
+    </div>
+
+    <form method="POST" class="preferences-form reveal">
+        <div class="genre-grid">
+            {% for genre in genre_options %}
+            <label class="genre-card">
+                <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in selected_genres %}checked{% endif %}>
+                <span class="genre-card-inner">
+                    <span class="genre-mark"></span>
+                    <strong>{{ genre }}</strong>
+                    <small>Shape your future recommendations</small>
+                </span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <div class="form-actions">
+            {% if is_edit_mode %}
+            <a href="{{ url_for('home') }}" class="ghost-button">Cancel</a>
+            {% endif %}
+            <button type="submit" class="primary-button">{% if is_edit_mode %}Save Preferences{% else %}Continue to Dashboard{% endif %}</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,53 +1,193 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>My Anime List</title>
-    <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='weblogo.jpg') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% block title %}Dashboard{% endblock %}
 
-<body>
-    <header>
-        <h1>My Anime List</h1>
-    </header>
-
-    <div class="filter-bar">
-        <a href="/" class="filter-btn {% if not selected_status or selected_status=='All' %}active{% endif %}">All</a>
-        <a href="/?status=Watching"
-            class="filter-btn {% if selected_status=='Watching' %}active{% endif %}">Watching</a>
-        <a href="/?status=Completed"
-            class="filter-btn {% if selected_status=='Completed' %}active{% endif %}">Completed</a>
-        <a href="/?status=Plan to Watch"
-            class="filter-btn {% if selected_status=='Plan to Watch' %}active{% endif %}">Plan to Watch</a>
+{% block content %}
+<section class="hero hero-home" data-cursor-mode="moon">
+    <div class="hero-copy reveal">
+        <p class="eyebrow">Moon Breathing Atmosphere</p>
+        <h1>Discover your next anime.</h1>
+        <p class="hero-text">
+            Build your watch history, shape your tastes, and prepare your profile for future personalized recommendations.
+        </p>
+        <div class="hero-actions">
+            <a href="#dashboard" class="primary-button" data-scroll-target="#dashboard">Enter Dashboard</a>
+            <a href="{{ url_for('preferences') }}" class="secondary-button">Edit Preferences</a>
+        </div>
+        <div class="hero-stats">
+            <article>
+                <strong>{{ status_counts["All"] }}</strong>
+                <span>Watch history entries</span>
+            </article>
+            <article>
+                <strong>{{ preference_summary.count }}</strong>
+                <span>Selected genres</span>
+            </article>
+            <article>
+                <strong>{{ recommendation_candidates|length }}</strong>
+                <span>Ready candidates</span>
+            </article>
+        </div>
     </div>
-    <table>
-        <tr>
-            <th>Anime Title</th>
-            <th>Status</th>
-            <th>Episodes</th>
-            <th>Actions</th>
-        </tr>
-        {% for anime in anime_list %}
-        <tr>
-            <td>{{ anime[1] }}</td>
-            <td>{{ anime[3] }}</td>
-            <td>{{ anime[4] }}</td>
-            <td>
-                <a href="/details/{{ anime[0] }}">View</a> |
-                <a href="/edit/{{ anime[0] }}">Edit</a> |
-                <form action="/delete/{{ anime[0] }}" method="POST" style="display:inline;">
-                    <button type="submit" class="delete-btn">Delete</button>
-                </form>
-            </td>
-        </tr>
+    <div class="hero-visual reveal" aria-hidden="true">
+        <div class="moon-stage">
+            <span class="moon-aura"></span>
+            <span class="moon-disc"></span>
+            <span class="moon-slash slash-one"></span>
+            <span class="moon-slash slash-two"></span>
+            <span class="moon-slash slash-three"></span>
+        </div>
+    </div>
+</section>
+
+<section class="dashboard-shell" id="dashboard" data-cursor-mode="sword">
+    <div class="section-head reveal">
+        <div>
+            <p class="eyebrow">Welcome Back</p>
+            <h2>{{ current_user.username }}'s command center</h2>
+        </div>
+        <p class="section-copy">
+            Your watch history, preferences, and future recommendation space all live here. No AI calls yet, just a clean recommendation-ready foundation.
+        </p>
+    </div>
+
+    <section class="overview-grid reveal">
+        <article class="glass-panel overview-card">
+            <p class="card-kicker">Preferences</p>
+            <h3>Your genres</h3>
+            <div class="pill-row">
+                {% for genre in preference_summary.genres %}
+                <span class="meta-chip">{{ genre }}</span>
+                {% endfor %}
+            </div>
+        </article>
+        <article class="glass-panel overview-card">
+            <p class="card-kicker">Watch Progress</p>
+            <h3>Status breakdown</h3>
+            <div class="mini-stats">
+                <span>Watching <strong>{{ status_counts["Watching"] }}</strong></span>
+                <span>Completed <strong>{{ status_counts["Completed"] }}</strong></span>
+                <span>Plan to Watch <strong>{{ status_counts["Plan to Watch"] }}</strong></span>
+            </div>
+        </article>
+        <article class="glass-panel overview-card">
+            <p class="card-kicker">For You</p>
+            <h3>Recommendation-ready</h3>
+            <p>Personalized recommendations will appear here after the AI layer is integrated.</p>
+        </article>
+    </section>
+
+    <div class="filter-strip reveal" aria-label="Anime status filters">
+        {% for option in status_options %}
+        <a
+            href="{{ url_for('home') }}{% if option != 'All' %}?status={{ option | urlencode }}{% endif %}#dashboard"
+            class="filter-pill {% if selected_status == option %}is-active{% endif %}"
+        >
+            <span>{{ option }}</span>
+            <strong>{{ status_counts[option] }}</strong>
+        </a>
         {% endfor %}
-    </table>
-
-    <div class="add-btn-container">
-        <a href="/add" class="add-btn">+ Add Anime</a>
     </div>
-</body>
 
-</html>
+    <section class="dashboard-panels reveal">
+        <article class="glass-panel dashboard-panel panel-wide">
+            <div class="panel-head">
+                <div>
+                    <p class="card-kicker">Watch History</p>
+                    <h3>{{ selected_status if selected_status != "All" else "All anime entries" }}</h3>
+                </div>
+                <a href="{{ url_for('add') }}" class="text-button">Add new entry</a>
+            </div>
+
+            {% if anime_list %}
+            <div class="anime-grid">
+                {% for anime in anime_list %}
+                <article class="anime-card">
+                    <div class="anime-card-visual">
+                        <span>{{ anime.poster_hint }}</span>
+                    </div>
+                    <div class="anime-card-body">
+                        <div class="anime-card-top">
+                            <div>
+                                <h3>{{ anime.title }}</h3>
+                                <p>{{ anime.genre }}</p>
+                            </div>
+                            <span class="status-badge status-{{ anime.status|lower|replace(' ', '-') }}">{{ anime.status }}</span>
+                        </div>
+                        <div class="anime-meta">
+                            <span>{{ anime.total_episodes }} Episodes</span>
+                            <span>{{ anime.description[:120] }}{% if anime.description|length > 120 %}...{% endif %}</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="{{ url_for('details', anime_id=anime.anime_id) }}" class="text-button">View</a>
+                            <a href="{{ url_for('edit', anime_id=anime.anime_id) }}" class="text-button">Edit</a>
+                            <form action="{{ url_for('delete', anime_id=anime.anime_id) }}" method="POST">
+                                <button type="submit" class="danger-button">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state compact-empty">
+                <div class="empty-state-art">✦</div>
+                <h3>No anime in this section yet.</h3>
+                <p>Add a title to start building your personal watch history.</p>
+            </div>
+            {% endif %}
+        </article>
+
+        <aside class="dashboard-sidebar">
+            <article class="glass-panel sidebar-panel">
+                <p class="card-kicker">Currently Watching</p>
+                <h3>{{ dashboard_sections["Watching"]|length }} active titles</h3>
+                <ul class="sidebar-list">
+                    {% for anime in dashboard_sections["Watching"][:4] %}
+                    <li>{{ anime.title }}</li>
+                    {% else %}
+                    <li>No active series yet.</li>
+                    {% endfor %}
+                </ul>
+            </article>
+
+            <article class="glass-panel sidebar-panel">
+                <p class="card-kicker">Completed</p>
+                <h3>{{ dashboard_sections["Completed"]|length }} finished titles</h3>
+                <ul class="sidebar-list">
+                    {% for anime in dashboard_sections["Completed"][:4] %}
+                    <li>{{ anime.title }}</li>
+                    {% else %}
+                    <li>No completed entries yet.</li>
+                    {% endfor %}
+                </ul>
+            </article>
+
+            <article class="glass-panel sidebar-panel">
+                <p class="card-kicker">Plan to Watch</p>
+                <h3>{{ dashboard_sections["Plan to Watch"]|length }} queued titles</h3>
+                <ul class="sidebar-list">
+                    {% for anime in dashboard_sections["Plan to Watch"][:4] %}
+                    <li>{{ anime.title }}</li>
+                    {% else %}
+                    <li>No queued titles yet.</li>
+                    {% endfor %}
+                </ul>
+            </article>
+
+            <article class="glass-panel sidebar-panel future-panel">
+                <p class="card-kicker">For You</p>
+                <h3>Future personalized section</h3>
+                <p>When the AI layer is added, it will use your saved genres, watch history, and these filtered candidates.</p>
+                <div class="pill-row">
+                    {% for anime in recommendation_candidates %}
+                    <span class="meta-chip">{{ anime.title }}</span>
+                    {% else %}
+                    <span class="meta-chip">Waiting for more catalog data</span>
+                    {% endfor %}
+                </div>
+            </article>
+        </aside>
+    </section>
+</section>
+{% endblock %}

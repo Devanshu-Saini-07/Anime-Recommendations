@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Anime Recommendations{% endblock %}</title>
+    <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='weblogo.jpg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <div class="cursor-layer" aria-hidden="true">
+        <div class="moon-cursor" data-moon-cursor>
+            <span class="moon-ring moon-ring-one"></span>
+            <span class="moon-ring moon-ring-two"></span>
+            <span class="moon-core"></span>
+        </div>
+        <div class="sword-cursor" data-sword-cursor>
+            <span class="sword-trail"></span>
+            <span class="sword-blade"></span>
+            <span class="sword-hilt"></span>
+        </div>
+    </div>
+
+    <div class="page-noise"></div>
+
+    <header class="site-header">
+        <nav class="navbar">
+            <a href="{{ url_for('home') if is_authenticated else url_for('login') }}" class="brand">
+                <span class="brand-mark">AR</span>
+                <span class="brand-copy">
+                    <strong>Anime Recommendations</strong>
+                    <small>Personalized Discovery Platform</small>
+                </span>
+            </a>
+
+            <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="site-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span class="sr-only">Toggle navigation</span>
+            </button>
+
+            <div class="nav-links" id="site-nav" data-nav-menu>
+                {% if is_authenticated %}
+                <a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}is-active{% endif %}">Dashboard</a>
+                <a href="{{ url_for('preferences') }}" class="{% if request.endpoint == 'preferences' %}is-active{% endif %}">Preferences</a>
+                <a href="{{ url_for('add') }}" class="{% if request.endpoint == 'add' %}is-active{% endif %}">Add Anime</a>
+                <a href="{{ url_for('recommendations') }}" class="{% if request.endpoint == 'recommendations' %}is-active{% endif %}">For You</a>
+                <span class="nav-user">{{ current_user.username }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" class="nav-logout">
+                    <button type="submit" class="ghost-button">Logout</button>
+                </form>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}is-active{% endif %}">Login</a>
+                <a href="{{ url_for('signup') }}" class="nav-cta {% if request.endpoint == 'signup' %}is-active{% endif %}">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-wrap">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <section class="flash-stack" aria-live="polite">
+                {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </section>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
