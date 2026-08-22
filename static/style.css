@@ -814,7 +814,6 @@ textarea:focus {
     left: 0;
     top: 0;
     opacity: 0;
-    transform: translate(-50%, -50%);
     transition: opacity 180ms ease;
 }
 
@@ -856,44 +855,13 @@ textarea:focus {
 }
 
 .sword-cursor {
-    width: 110px;
-    height: 110px;
-}
-
-.sword-trail,
-.sword-blade,
-.sword-hilt {
-    position: absolute;
-    transform-origin: left center;
-}
-
-.sword-trail {
-    left: 8px;
-    top: 53px;
-    width: 48px;
-    height: 2px;
-    background: linear-gradient(90deg, rgba(255, 190, 150, 0), rgba(255, 190, 150, 0.6));
-}
-
-.sword-blade {
-    left: 32px;
-    top: 48px;
-    width: 56px;
-    height: 5px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, rgba(245, 248, 255, 0.95), rgba(160, 190, 255, 0.78));
-    transform: rotate(-20deg);
-    box-shadow: 0 0 18px rgba(196, 217, 255, 0.26);
-}
-
-.sword-hilt {
-    left: 20px;
-    top: 46px;
-    width: 18px;
-    height: 9px;
-    border-radius: 10px;
-    background: linear-gradient(90deg, rgba(255, 159, 128, 0.95), rgba(255, 198, 170, 0.75));
-    transform: rotate(-20deg);
+    width: 96px;
+    height: 96px;
+    background-image: url("/static/images/moon-sword.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    filter: drop-shadow(0 8px 18px rgba(8, 14, 28, 0.55)) drop-shadow(0 0 12px rgba(196, 217, 255, 0.18));
 }
 
 .reveal {

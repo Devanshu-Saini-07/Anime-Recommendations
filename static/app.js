@@ -66,15 +66,20 @@
     }
 
     const sections = Array.from(document.querySelectorAll("[data-cursor-mode]"));
-    let currentMode = "sword";
+    let currentMode = null;
     let pointerX = window.innerWidth / 2;
     let pointerY = window.innerHeight / 2;
     let moonX = pointerX;
     let moonY = pointerY;
     let swordX = pointerX;
     let swordY = pointerY;
+    let lastPointerTarget = null;
 
     function applyMode(mode) {
+        if (currentMode === mode) {
+            return;
+        }
+
         currentMode = mode;
         body.classList.remove("cursor-moon", "cursor-sword");
         moonCursor.classList.remove("is-active");
@@ -89,18 +94,9 @@
         }
     }
 
-    function detectMode() {
-        const midpoint = window.innerHeight * 0.32;
-        let selected = "sword";
-
-        sections.forEach(function (section) {
-            const rect = section.getBoundingClientRect();
-            if (rect.top <= midpoint && rect.bottom >= midpoint) {
-                selected = section.getAttribute("data-cursor-mode") || "sword";
-            }
-        });
-
-        applyMode(selected);
+    function getModeFromTarget(target) {
+        const activeSection = target && target.closest ? target.closest("[data-cursor-mode]") : null;
+        return activeSection ? activeSection.getAttribute("data-cursor-mode") || "moon" : "moon";
     }
 
     function animate() {
@@ -110,7 +106,7 @@
         swordY += (pointerY - swordY) * 0.22;
 
         moonCursor.style.transform = "translate(" + moonX + "px, " + moonY + "px) translate(-50%, -50%)";
-        swordCursor.style.transform = "translate(" + swordX + "px, " + swordY + "px) translate(-50%, -50%)";
+        swordCursor.style.transform = "translate(" + (swordX - 18) + "px, " + (swordY - 16) + "px)";
 
         window.requestAnimationFrame(animate);
     }
@@ -118,11 +114,27 @@
     window.addEventListener("mousemove", function (event) {
         pointerX = event.clientX;
         pointerY = event.clientY;
+        lastPointerTarget = event.target;
+        applyMode(getModeFromTarget(event.target));
     });
 
-    window.addEventListener("scroll", detectMode, { passive: true });
-    window.addEventListener("resize", detectMode);
+    document.addEventListener("mouseleave", function () {
+        body.classList.remove("cursor-moon", "cursor-sword");
+        moonCursor.classList.remove("is-active");
+        swordCursor.classList.remove("is-active");
+        currentMode = null;
+    });
 
-    detectMode();
+    window.addEventListener("mouseenter", function () {
+        applyMode(getModeFromTarget(lastPointerTarget));
+    });
+
+    window.addEventListener("resize", function () {
+        applyMode(getModeFromTarget(lastPointerTarget));
+    });
+
+    applyMode(sections.some(function (section) {
+        return section.getAttribute("data-cursor-mode") === "moon";
+    }) ? "moon" : "sword");
     animate();
 })();
