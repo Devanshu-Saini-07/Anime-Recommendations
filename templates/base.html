@@ -7,15 +7,21 @@
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='weblogo.jpg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %} {% if is_authenticated %}authenticated-app{% endif %}">
+    {% if is_authenticated %}
+    <div class="moon-breathing-scene" aria-hidden="true">
+        <div class="moon-breathing-bg"></div>
+        <div class="moon-breathing-image" id="moonBreathingBg"></div>
+        <canvas class="moon-breathing-hd" id="moonBreathingHd"></canvas>
+        <canvas class="moon-breathing-canvas" id="moonBreathingCanvas"></canvas>
+    </div>
+    {% endif %}
+
+    {% if request.endpoint != 'home' %}
     <div class="cursor-layer" aria-hidden="true">
-        <div class="moon-cursor" data-moon-cursor>
-            <span class="moon-ring moon-ring-one"></span>
-            <span class="moon-ring moon-ring-two"></span>
-            <span class="moon-core"></span>
-        </div>
         <div class="sword-cursor" data-sword-cursor></div>
     </div>
+    {% endif %}
 
     <div class="page-noise"></div>
 

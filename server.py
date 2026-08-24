@@ -13,7 +13,14 @@ load_dotenv()
 
 app = Flask(__name__)
 
-is_production = os.getenv("FLASK_ENV", "production").lower() == "production"
+flask_env = os.getenv("FLASK_ENV", "").strip().lower()
+render_external_url = os.getenv("RENDER_EXTERNAL_URL", "").strip().lower()
+is_render = os.getenv("RENDER", "").strip().lower() == "true"
+is_production = (
+    flask_env == "production"
+    or is_render
+    or render_external_url.startswith("https://")
+)
 secret_key = os.getenv("FLASK_SECRET_KEY")
 if is_production and not secret_key:
     raise RuntimeError("Missing required environment variable: FLASK_SECRET_KEY")

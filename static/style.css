@@ -39,9 +39,63 @@ body {
         linear-gradient(180deg, #05070f 0%, #09111f 42%, #070b14 100%);
 }
 
-body.cursor-moon,
 body.cursor-sword {
     cursor: none;
+}
+
+body.auth-page.cursor-sword {
+    cursor: none;
+}
+
+body.authenticated-app {
+    background: #000;
+}
+
+.moon-breathing-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.moon-breathing-bg,
+.moon-breathing-image,
+.moon-breathing-canvas,
+.moon-breathing-hd {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+.moon-breathing-bg {
+    z-index: 0;
+    background: radial-gradient(ellipse at 50% 30%, #0d0015 0%, #05000a 40%, #000 100%);
+}
+
+.moon-breathing-image {
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    z-index: 1;
+    background-image: url("/static/images/moon-breathing-bg.png");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+    will-change: transform;
+}
+
+body.aura-active .moon-breathing-image {
+    opacity: 0.22;
+}
+
+.moon-breathing-hd {
+    z-index: 9;
+}
+
+.moon-breathing-canvas {
+    z-index: 10;
 }
 
 .page-noise {
@@ -808,7 +862,6 @@ textarea:focus {
     z-index: 100;
 }
 
-.moon-cursor,
 .sword-cursor {
     position: fixed;
     left: 0;
@@ -819,42 +872,8 @@ textarea:focus {
     will-change: transform, opacity;
 }
 
-.moon-cursor.is-active,
 .sword-cursor.is-active {
     opacity: 1;
-}
-
-.moon-cursor {
-    width: 72px;
-    height: 72px;
-    transform: translate(-50%, -50%);
-}
-
-.moon-ring,
-.moon-core {
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    border-radius: 50%;
-}
-
-.moon-ring-one {
-    width: 100%;
-    height: 100%;
-    border: 1px solid rgba(212, 226, 255, 0.24);
-}
-
-.moon-ring-two {
-    width: 70%;
-    height: 70%;
-    border: 1px solid rgba(212, 226, 255, 0.18);
-}
-
-.moon-core {
-    width: 14px;
-    height: 14px;
-    background: rgba(230, 239, 255, 0.85);
-    box-shadow: 0 0 18px rgba(206, 221, 255, 0.42);
 }
 
 .sword-cursor {
@@ -916,12 +935,15 @@ textarea:focus {
 }
 
 @media (max-width: 760px) {
-    body.cursor-moon,
     body.cursor-sword {
         cursor: auto;
     }
 
     .cursor-layer {
+        display: none;
+    }
+
+    .moon-breathing-scene {
         display: none;
     }
 
