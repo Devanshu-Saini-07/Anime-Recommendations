@@ -68,19 +68,23 @@
     }
 
     function initSwordCursor() {
-        if (!canUseCustomCursor || !swordCursor) {
+        if (!canUseCustomCursor || !swordCursor || !body.classList.contains("auth-page")) {
             return;
         }
 
         const isAuthPage = body.classList.contains("auth-page");
-        const authCard = document.querySelector(".auth-card");
         const interactiveSelector = [
+            "header",
             "button",
             "a[href]",
             "input",
             "select",
             "textarea",
             "label",
+            ".glass-panel",
+            ".anime-card",
+            ".recommendation-card",
+            ".genre-card",
             "[role='button']",
             "[data-menu-toggle]"
         ].join(", ");
@@ -109,9 +113,9 @@
 
         function setVisibilityFromTarget(target) {
             if (isAuthPage) {
-                swordVisible = !(authCard && target && target.closest && target.closest(".auth-card"));
+                swordVisible = true;
             } else {
-                swordVisible = Boolean(target && target.closest && target.closest(interactiveSelector));
+                swordVisible = !Boolean(target && target.closest && target.closest(interactiveSelector));
             }
             renderVisibility();
         }

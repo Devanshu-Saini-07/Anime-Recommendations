@@ -1,4 +1,5 @@
 import os
+from gemini_recommender import get_recommendations
 from contextlib import closing
 from functools import wraps
 
@@ -186,47 +187,79 @@ def get_user_watch_history(user_id):
 
 def get_recommendation_candidates(user_id):
     preferences = get_user_preferences(user_id)
+
     excluded_titles = fetch_all(
         """
         SELECT DISTINCT title
         FROM anime
-        WHERE user_id=%s AND status IN ('Watching', 'Completed', 'Plan to Watch')
+        WHERE user_id=%s
+          AND status IN ('Watching', 'Completed', 'Plan to Watch')
         """,
         (user_id,),
     )
-    excluded_titles = {row[0].strip().lower() for row in excluded_titles if row and row[0]}
 
-    if preferences:
-        placeholders = ", ".join(["%s"] * len(preferences))
-        query = f"""
-            SELECT anime_id, title, genre, status, total_episodes, description, poster_hint, user_id
-            FROM anime
-            WHERE user_id <> %s
-              AND genre IN ({placeholders})
-            ORDER BY anime_id DESC
-            LIMIT 24
+    excluded_titles = {
+        row[0].strip().lower()
+        for row in excluded_titles
+        if row and row[0]
+    }
+
+    # Get the global anime catalog
+    rows = fetch_all(
         """
-        rows = fetch_all(query, (user_id, *preferences))
-    else:
-        rows = fetch_all(
-            """
-            SELECT anime_id, title, genre, status, total_episodes, description, poster_hint, user_id
-            FROM anime
-            WHERE user_id <> %s
-            ORDER BY anime_id DESC
-            LIMIT 24
-            """,
-            (user_id,),
-        )
+        SELECT
+            catalog_id AS anime_id,
+            title,
+            genre,
+            NULL AS status,
+            total_episodes,
+            description,
+            poster_hint,
+            NULL AS user_id
+        FROM anime_catalog
+        ORDER BY catalog_id DESC
+        LIMIT 100
+        """
+    )
 
     candidates = []
     seen_titles = set()
+
+    preferred_genres = {
+        genre.strip().lower()
+        for genre in preferences
+    }
+
     for anime in dict_list(rows):
         normalized_title = anime["title"].strip().lower()
-        if normalized_title in excluded_titles or normalized_title in seen_titles:
+
+        # Never recommend something already watched/added
+        if normalized_title in excluded_titles:
             continue
+
+        # Avoid duplicate titles
+        if normalized_title in seen_titles:
+            continue
+
+        anime_genres = {
+            genre.strip().lower()
+            for genre in anime["genre"].split(",")
+        }
+
+        # Prefer anime matching user's selected genres
+        matching_genres = anime_genres.intersection(preferred_genres)
+
+        anime["preference_match"] = len(matching_genres)
+
         seen_titles.add(normalized_title)
         candidates.append(anime)
+
+    # Matching genres first
+    candidates.sort(
+        key=lambda anime: anime["preference_match"],
+        reverse=True
+    )
+
     return candidates
 
 
@@ -494,12 +527,22 @@ def details(anime_id):
 @app.route("/recommendations")
 @login_required
 def recommendations():
-    candidates = get_recommendation_candidates(g.user["user_id"])
+    user_id = g.user["user_id"]
+
+    preferences = get_user_preferences(user_id)
+    watch_history = get_user_watch_history(user_id)
+    candidates = get_recommendation_candidates(user_id)
+    recommendations = get_recommendations(
+        preferences,
+        watch_history,
+        candidates,
+    )
+
     return render_template(
         "recommendations.html",
-        recommendations=candidates[:12],
+        recommendations=recommendations,
         candidate_count=len(candidates),
-        preference_summary=get_preference_summary(g.user["user_id"]),
+        preference_summary=get_preference_summary(user_id),
     )
 
 
