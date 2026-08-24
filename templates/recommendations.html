@@ -10,7 +10,7 @@
             <h1>For You</h1>
         </div>
         <p class="section-copy">
-            This section already excludes anime in your watch history before any future AI API call. Personalized recommendation generation is not active yet.
+            {% if recommendations %}These recommendations are selected from your filtered catalog using your preferences and watch history.{% else %}No AI recommendations are available right now.{% endif %}
         </p>
     </div>
 
@@ -29,24 +29,28 @@
             <h3>{{ candidate_count }} candidates</h3>
             <p>These are catalog entries left after removing titles already marked Watching, Completed, or Plan to Watch for your account.</p>
         </article>
+        {% if not recommendations %}
         <article class="glass-panel overview-card">
             <p class="card-kicker">Next integration step</p>
-            <h3>AI comes later</h3>
-            <p>The API layer can be added later on top of these cleaned inputs without changing user ownership rules.</p>
+            <h3>No AI recommendations</h3>
+            <p>Try again later when personalized recommendations are available.</p>
         </article>
+        {% endif %}
     </section>
 
     {% if recommendations %}
     <section class="recommendation-grid reveal">
         {% for rec in recommendations %}
         <article class="recommendation-card">
-            <div class="recommendation-visual">{{ rec.poster_hint }}</div>
+            <div class="recommendation-visual">{{ rec.title }}</div>
             <div class="recommendation-body">
                 <h2>{{ rec.title }}</h2>
-                <p>{{ rec.description[:130] }}{% if rec.description|length > 130 %}...{% endif %}</p>
+                <p>{{ rec.reason }}</p>
                 <div class="details-tags">
-                    <span class="meta-chip">{{ rec.genre }}</span>
-                    <span class="meta-chip">{{ rec.total_episodes }} Episodes</span>
+                    {% for genre in rec.genres %}
+                    <span class="meta-chip">{{ genre }}</span>
+                    {% endfor %}
+                    <span class="meta-chip">Match {{ rec.match_score }}%</span>
                 </div>
             </div>
         </article>
@@ -55,8 +59,8 @@
     {% else %}
     <section class="empty-state reveal">
         <div class="empty-state-art">✦</div>
-        <h2>No candidate pool yet.</h2>
-        <p>Add more catalog data or complete your preferences to prepare the future recommendation feed.</p>
+        <h2>No AI recommendations available right now.</h2>
+        <p>Try again later after Gemini has generated recommendations from your catalog.</p>
     </section>
     {% endif %}
 </section>
