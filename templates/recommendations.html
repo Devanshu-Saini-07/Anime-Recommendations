@@ -42,15 +42,18 @@
     <section class="recommendation-grid reveal">
         {% for rec in recommendations %}
         <article class="recommendation-card">
-            <div class="recommendation-visual">{{ rec.title }}</div>
+            <div class="recommendation-visual">
+                <span class="recommendation-index">0{{ loop.index }}</span>
+                <span>{{ rec.title }}</span>
+            </div>
             <div class="recommendation-body">
                 <h2>{{ rec.title }}</h2>
-                <p>{{ rec.reason }}</p>
+                <p class="recommendation-reason">{{ rec.reason }}</p>
                 <div class="details-tags">
                     {% for genre in rec.genres %}
                     <span class="meta-chip">{{ genre }}</span>
                     {% endfor %}
-                    <span class="meta-chip">Match {{ rec.match_score }}%</span>
+                    <span class="meta-chip match-score">{{ rec.match_score }}% Match</span>
                 </div>
             </div>
         </article>
@@ -61,6 +64,7 @@
         <div class="empty-state-art">✦</div>
         <h2>No AI recommendations available right now.</h2>
         <p>Try again later after Gemini has generated recommendations from your catalog.</p>
+        <a href="{{ url_for('home') }}" class="secondary-button">Return to dashboard</a>
     </section>
     {% endif %}
 </section>

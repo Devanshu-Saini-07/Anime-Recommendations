@@ -20,12 +20,16 @@
                 <span>Watch history entries</span>
             </article>
             <article>
-                <strong>{{ preference_summary.count }}</strong>
-                <span>Selected genres</span>
+                <strong>{{ status_counts["Watching"] }}</strong>
+                <span>Watching now</span>
             </article>
             <article>
-                <strong>{{ recommendation_candidates|length }}</strong>
-                <span>Ready candidates</span>
+                <strong>{{ status_counts["Completed"] }}</strong>
+                <span>Completed titles</span>
+            </article>
+            <article>
+                <strong>{{ status_counts["Plan to Watch"] }}</strong>
+                <span>Queued titles</span>
             </article>
         </div>
     </div>
@@ -134,6 +138,7 @@
                 <div class="empty-state-art">✦</div>
                 <h3>No anime in this section yet.</h3>
                 <p>Add a title to start building your personal watch history.</p>
+                <a href="{{ url_for('add') }}" class="primary-button">Add your first title</a>
             </div>
             {% endif %}
         </article>
