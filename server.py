@@ -72,12 +72,16 @@ def fetch_one(query, params=None):
             return cursor.fetchone()
 
 
-def execute_query(query, params=None):
+def execute_query(query, params=None, return_rowcount=False):
     with closing(connect()) as db:
         with closing(db.cursor()) as cursor:
             cursor.execute(query, params or ())
+            rowcount = getattr(cursor, "rowcount", 0)
+            lastrowid = getattr(cursor, "lastrowid", None)
             db.commit()
-            return getattr(cursor, "lastrowid", None)
+            if return_rowcount:
+                return rowcount
+            return lastrowid
 
 
 def sanitize_total_episodes(raw_value):
@@ -593,15 +597,35 @@ def edit(anime_id):
 @app.route("/delete/<int:anime_id>", methods=["POST"])
 @login_required
 def delete(anime_id):
-    anime = get_user_anime(anime_id, g.user["user_id"])
+    user_id = g.user["user_id"]
+    app.logger.info(
+        "delete_attempt anime_id=%s user_id=%s method=%s",
+        anime_id,
+        user_id,
+        request.method,
+    )
+
+    anime = get_user_anime(anime_id, user_id)
     if not anime:
         flash("That anime is no longer available.", "error")
         return redirect(url_for("home"))
 
-    execute_query(
+    affected_rows = execute_query(
         "DELETE FROM anime WHERE anime_id=%s AND user_id=%s",
-        (anime_id, g.user["user_id"]),
+        (anime_id, user_id),
+        return_rowcount=True,
     )
+    app.logger.info(
+        "delete_result anime_id=%s user_id=%s affected_rows=%s",
+        anime_id,
+        user_id,
+        affected_rows,
+    )
+
+    if affected_rows == 0:
+        flash("That anime could not be deleted from your list.", "error")
+        return redirect(url_for("home"))
+
     flash(f"{anime['title']} was removed from your list.", "success")
     return redirect(url_for("home"))
 

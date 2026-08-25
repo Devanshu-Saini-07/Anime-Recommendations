@@ -10,10 +10,11 @@ import server
 
 
 class FakeCursor:
-    def __init__(self, fetchall_results=None, fetchone_results=None, lastrowid=101):
+    def __init__(self, fetchall_results=None, fetchone_results=None, lastrowid=101, rowcount=1):
         self.fetchall_results = list(fetchall_results or [])
         self.fetchone_results = list(fetchone_results or [])
         self.lastrowid = lastrowid
+        self.rowcount = rowcount
         self.executed = []
 
     def execute(self, query, params=()):
@@ -53,8 +54,8 @@ class RouteTests(unittest.TestCase):
         server.app.config["TESTING"] = True
         self.client = server.app.test_client()
 
-    def make_connection(self, fetchall_results=None, fetchone_results=None, lastrowid=101):
-        return FakeConnection(FakeCursor(fetchall_results, fetchone_results, lastrowid))
+    def make_connection(self, fetchall_results=None, fetchone_results=None, lastrowid=101, rowcount=1):
+        return FakeConnection(FakeCursor(fetchall_results, fetchone_results, lastrowid, rowcount))
 
     def test_home_redirects_to_login_when_logged_out(self):
         response = self.client.get("/")
@@ -159,6 +160,19 @@ class RouteTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"couldn&#39;t find that anime", response.data)
+
+    def test_delete_failure_does_not_report_success(self):
+        connection = self.make_connection(
+            fetchone_results=[(7, "sakura", "sakura@example.com", "2026-08-22 09:00:00")],
+            rowcount=0,
+        )
+        with patch("server.connect", return_value=connection):
+            with patch("server.get_current_user", return_value={"user_id": 7, "username": "sakura", "email": "sakura@example.com", "has_completed_preferences": True}):
+                with patch("server.get_user_anime", return_value={"anime_id": 42, "title": "Naruto", "user_id": 7}):
+                    response = self.client.post("/delete/42", follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"could not be deleted", response.data)
 
     def test_recommendation_candidates_exclude_existing_history(self):
         with patch("server.get_user_preferences", return_value=["Action"]):
