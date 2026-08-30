@@ -13,11 +13,6 @@ JIKAN_TIMEOUT = 5
 STATUS_OPTIONS = {"Watching", "Completed", "Plan to Watch"}
 
 
-def auth_decorators(view):
-    view = authentication_classes([ExistingUserBasicAuthentication])(view)
-    return permission_classes([IsAuthenticated])(view)
-
-
 def anime_to_dict(anime):
     return {
         "anime_id": anime.anime_id,
@@ -50,7 +45,8 @@ def fetch_poster(title):
 
 
 @api_view(["GET", "POST"])
-@auth_decorators
+@authentication_classes([ExistingUserBasicAuthentication])
+@permission_classes([IsAuthenticated])
 def anime_collection(request):
     if request.method == "GET":
         status_filter = request.query_params.get("status")
@@ -89,7 +85,8 @@ def anime_collection(request):
 
 
 @api_view(["GET", "PUT", "PATCH", "DELETE"])
-@auth_decorators
+@authentication_classes([ExistingUserBasicAuthentication])
+@permission_classes([IsAuthenticated])
 def anime_detail(request, anime_id):
     anime = Anime.objects.filter(anime_id=anime_id, user=request.user).first()
     if anime is None:
@@ -127,10 +124,15 @@ def anime_detail(request, anime_id):
 
 
 @api_view(["GET", "POST"])
-@auth_decorators
+@authentication_classes([ExistingUserBasicAuthentication])
+@permission_classes([IsAuthenticated])
 def preferences(request):
     if request.method == "GET":
-        genres = list(UserPreference.objects.filter(user=request.user).values_list("genre_name", flat=True).order_by("genre_name"))
+        genres = list(
+            UserPreference.objects.filter(user=request.user)
+            .values_list("genre_name", flat=True)
+            .order_by("genre_name")
+        )
         return Response({"genres": genres})
 
     genres = request.data.get("genres", [])
@@ -146,18 +148,19 @@ def preferences(request):
 
 
 @api_view(["GET"])
-@auth_decorators
+@authentication_classes([ExistingUserBasicAuthentication])
+@permission_classes([IsAuthenticated])
 def recommendations(request):
-    watched = set(
+    watched = {
         title.lower()
         for title in Anime.objects.filter(user=request.user).values_list("title", flat=True)
         if title
-    )
-    genres = set(
+    }
+    genres = {
         genre.lower()
         for genre in UserPreference.objects.filter(user=request.user).values_list("genre_name", flat=True)
         if genre
-    )
+    }
 
     candidates = []
     for item in AnimeCatalog.objects.all()[:100]:
