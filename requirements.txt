@@ -3,3 +3,7 @@ google-genai==2.19.0
 gunicorn==23.0.0
 mysql-connector-python==9.4.0
 python-dotenv==1.1.1
+Django>=5.2,<6.0
+djangorestframework>=3.16,<4.0
+mysqlclient>=2.2,<3.0
+requests>=2.32,<3.0
